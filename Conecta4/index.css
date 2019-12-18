@@ -1,0 +1,52 @@
+#panel{
+    margin: 30px auto;
+    display: grid;
+    border: 1px solid black;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 1px;
+    width: 700px;
+    height: 600px;
+    background-color: black;
+
+
+}
+
+.cell {
+    background-color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.ficha {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.roja {
+    background: red;
+}
+
+.azul {
+    background: blue;
+}
+
+header {
+    text-align: center;
+}
+
+#buttons {
+    text-align: center;
+    margin: 10px;
+}
+
+button {
+    margin: 10px 50px;
+    border: none;
+    min-width: 70px;
+    padding: 5px;
+    min-height: 35px;
+}
