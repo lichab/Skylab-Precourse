@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="title">
+            <h1>PASAPALABRA</h1>
+            <section class="welcome">
+                <h3>
+                    Bienvenido a Pasapalabra. Por favor Ingresa tu nombre y haz click en "Submit".
+                </h3>
+                <input type="text" name="username" value="" placeholder="User Name">
+                <button>Submit</button>
+            </section>
+            <div class="rules hidden">
+
+            </div>
+        </header>
+        <div id="isCorrect"></div>
+        <section class="letters hidden">
+            <ul>
+                <li>A</li>
+                <li>B</li>
+                <li>C</li>
+                <li>D</li>
+                <li>E</li>
+                <li>F</li>
+                <li>G</li>
+                <li>H</li>
+                <li>I</li>
+                <li>J</li>
+                <li>K</li>
+                <li>L</li>
+                <li>M</li>
+                <li>N</li>
+                <li>Ñ</li>
+                <li>O</li>
+                <li>P</li>
+                <li>Q</li>
+                <li>R</li>
+                <li>S</li>
+                <li>T</li>
+                <li>U</li>
+                <li>V</li>
+                <li>W</li>
+                <li>X</li>
+                <li>Y</li>
+                <li>Z</li>
+            </ul>
+            <div id="timer">180</div>
+            <div id="points"></div>
+        </section>
+        <section class="definitions">
+            <p></p>
+        </section>
+        <section class="answers hidden">
+            <input id="answer" type="text" name="answer" placeholder="Palabra" value="">
+            <input id="submit" type="button" value="Ok">
+            <input type="button"value="Pasapalabra">
+            <input type="button" onclick="endButton()" value="END">
+        </section>
+        <button id="start" class="hidden" >Jugar</button>
+        <button id="restart" class="hidden">Jugar Nuevamente</button>
+        <section id = "rank" class="hidden">
+            <table id="table">
+                <tr>
+                    <th>Jugador</th>
+                    <th>Record</th>
+                </tr>
+            </table>
+        </section>
+    </div>
+</body>
+<script src="index.js"></script>
+
+</html>
