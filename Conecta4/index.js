@@ -1,16 +1,43 @@
-var cells = document.getElementsByClassName('cell');
 var player1 = new Player('human', 'Lisandro', 'B')
-var game = new Game(player1, 0, createBoard());
+var game = new Game(player1, 0, 0, 0, createBoard());
 
+var cells = document.getElementsByClassName('cell');
+
+var grid = document.getElementById('grid');
+
+// function removeWelcome(){
+//     var welcomeScreen = document.getElementById('welcome-screen');
+//     welcomeScreen.style.visibility = 'hidden';
+//     welcomeScreen.style.opacity = 0;
+
+// }
+
+function createGrid(board) {
+    for (var row = 0; row < board.length; row++) {
+        for (var col = 0; col < board[row].length; col++) {
+            var colDiv = document.createElement('div');
+            colDiv.className = 'cell';
+            colDiv.id = col + 1;
+            grid.appendChild(colDiv);
+        }
+    }
+}
+
+createGrid(game.board)
+
+function placeChip() {
+    for(var row = 5; row > 0; row++){
+        if(game.board[row] === undefined){
+
+        }
+    }
+};
 
 for (var i = 0; i < cells.length; i++) {
     cells[i].addEventListener('click', function (event) {
-        makeMove();
         var position = Number(event.target.id);
-        var coordinates = getCoordinates(position);
-        var move = new Move(coordinates[0], coordinates[1])
-        game.currentPlayer.currentMove = move;
-        game.updateBoard();
+        game.updateBoard(position);
+        placeChip()
 
         var win = checkWin();
         if (win) {
@@ -23,26 +50,19 @@ for (var i = 0; i < cells.length; i++) {
 
 function createBoard() {
     var board = new Array(6);
-    var cellNumber = 1
     for (var i = 0; i < 6; i++) {
         board[i] = new Array(7);
-        for (var j = 0; j < 7; j++) {
-            board[i][j] = cellNumber;
-            cellNumber++
-        }
     }
     return board;
 }
 
 
-
-
-function Player(type, name, color, currentMove, movesMade) {
+function Player(type, name, color) {
     this.type = type;
     this.name = name;
     this.color = color;
-    this.currentMove = currentMove;
-    this.movesMade = movesMade;
+    this.currentMove = new Move(0, 0);
+    this.movesMade = [];
 
     this.storeMove = function () {
         this.movesMade.push(currentMove);
@@ -61,19 +81,36 @@ function Move(row, col) {
     }
 }
 
-function Game(currentPlayer, count, board) {
+function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
     this.currentPlayer = currentPlayer;
-    this.count = count;
+    this.countVert = countVert;
+    this.countHoriz = countHoriz;
+    this.countDiag = countDiag;
     this.board = board;
 
-    this.resetCount = function () {
-        this.count = 0;
-        this;
+    this.resetCount = function (direction) {
+        if (direction === 'h') {
+            this.countHoriz = 0
+        };
+        if (direction === 'v') {
+            this.countVert = 0
+        };
+        if (direction === 'd') {
+            this.countDiag = 0
+        };
+
+        return this;
     };
-    this.updateBoard = function () {
-        var row = this.currentPlayer.currentMove.row;
-        var col = this.currentPlayer.currentMove.col;
-        this.board[row][col] = this.currentPlayer.color;
+    this.updateBoard = function (colPos) {
+        for (var row = 5; row > 0; row--) {
+            if (this.board[row][colPos] === undefined) {
+                this.board[row][colPos] = this.currentPlayer.color;
+
+                var coord = [row, colPos];
+                this.currentPlayer.currentMove.getPos(coord);
+                return this;
+            }
+        }
     }
 }
 
@@ -89,34 +126,19 @@ function getCoordinates(position) {
     return index;
 }
 
-function makeMove(player) {
-    // if (player[0] === 1) {
-    //     event.target.classList.add('ficha', 'roja')
-    // } else {
-    event.target.classList.add('ficha', 'azul')
-    // }
-    // var currentPlayer = player[0];
-    // var nextPlayer = player[1];
-    // player[0] = nextPlayer
-    // player[1] = currentPlayer;
-
-
-
-    // return player;
-}
 
 function checkHorizontalWin() {
     var row = game.currentPlayer.currentMove.row;
     for (var col = 0; col <= 6; col++) {
-        console.log(game.count)
+        console.log(game.countHoriz)
         if (game.board[row][col] === game.board[row][col + 1]) {
-            game.count++
+            game.countHoriz++
 
             if (game.count === 3) {
                 return true;
             }
         } else {
-            game.resetCount();
+            game.resetCount('h');
         }
     }
 
@@ -124,7 +146,7 @@ function checkHorizontalWin() {
 }
 
 function checkVerticalWin() {
-    game.resetCount();
+
     var col = game.currentPlayer.currentMove.col;
     for (var row = 1; row <= 5; row++) {
         if (game.board[row][col] === game.board[row - 1][col]) {
@@ -134,26 +156,29 @@ function checkVerticalWin() {
             }
         }
     }
+    game.resetCount('v');
     return false;
 }
 
 function checkDiagonalWin() {
-    game.resetCount();
-    for(var row = 1; row <= 5; row++){
-        for(var col = 0; col <= 6; col++){
-            if(game.board[row][col] === game.board[row-1][col-1]){
+
+    for (var row = 1; row <= 5; row++) {
+        for (var col = 0; col <= 6; col++) {
+            if (game.board[row][col] === game.board[row - 1][col - 1]) {
                 game.count++;
-                if(game.count === 3){
+                if (game.count === 3) {
                     return true;
                 }
             }
         }
     }
+    game.resetCount('d');
+    return false;
 }
 
 
 function checkWin() {
-    
+
     var horizontalWin = checkHorizontalWin();
     var verticalWin = checkVerticalWin();
     var diagonalWin = checkDiagonalWin()

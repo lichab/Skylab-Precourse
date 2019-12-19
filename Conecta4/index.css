@@ -1,33 +1,79 @@
-#panel{
-    margin: 30px auto;
-    display: grid;
-    border: 1px solid black;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    gap: 1px;
-    width: 700px;
-    height: 600px;
-    background-color: black;
-
+#welcome-screen {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #87b88c;
+    z-index: 1;
+    
+    opacity: 1;
+    transition: visibility 1s linear, opacity 1s linear;
 
 }
 
-.cell {
-    background-color: grey;
+
+
+
+button {
+    background: #48a0c9;
+    border-radius: 5px;
+    box-shadow: 0.5px 0.5px 4px #2a58a1;
+    color: #e7e8cb;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: monospace;
+
+    margin: 10px 50px;
+    min-width: 100px;
+    border: none; 
+    padding: 5px;
+    min-height: 30px;
+}
+
+body{
+    font-family: monospace;
+    background: #87b88c;
+    color: #e7e8cb;
+}
+
+section#grid{
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    width: 340px;
+    height: 308px;
+    background-image: url('Connect4Board.png');
+    background-repeat: no-repeat;
+    background-size: 340px 308px;
+}
+
+.wrapper {
+    position: relative;
+    z-index: 0;
+}
+
+div.cell {
+    background: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: -1;
+    
 
 }
 
-.ficha {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-}
+
 
 .roja {
     background: red;
+
 }
 
 .azul {
@@ -39,14 +85,9 @@ header {
 }
 
 #buttons {
-    text-align: center;
+    display: flex;
     margin: 10px;
-}
+    justify-content: center;    
 
-button {
-    margin: 10px 50px;
-    border: none;
-    min-width: 70px;
-    padding: 5px;
-    min-height: 35px;
+
 }
