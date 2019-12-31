@@ -1,4 +1,4 @@
-#welcome-screen {
+/* #welcome-screen {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -16,7 +16,79 @@
 
 }
 
+#welcome-screen div {
+    display: flex;
+    width: 100px;
+    justify-content: center;
+    margin: 8px;
 
+}
+
+#welcome-screen input {
+    margin-right: 14px;
+}
+
+label{
+    min-width: 70px;
+
+} */
+
+body{
+
+    font-family: monospace;
+    background: #87b88c;
+    color: #e7e8cb;
+
+}
+
+section#grid{
+    margin: 30px auto;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    width: 340px;
+    height: 308px;
+    background: #3d81e7;
+    gap: 5px;
+    padding: 5px;
+}
+
+/* .wrapper {
+    position: relative;
+    z-index: 0;
+} */
+
+div.cell {
+    background: white;
+    display: flex;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+div.cell.red {
+    background: red;
+
+}
+
+div.cell.yellow {
+    background: yellow;
+}
+
+header {
+    text-align: center;
+}
+
+#buttons {
+    display: flex;
+    margin: 10px;
+    justify-content: center;    
+
+
+}
 
 
 button {
@@ -33,61 +105,4 @@ button {
     border: none; 
     padding: 5px;
     min-height: 30px;
-}
-
-body{
-    font-family: monospace;
-    background: #87b88c;
-    color: #e7e8cb;
-}
-
-section#grid{
-    margin: 30px auto;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    width: 340px;
-    height: 308px;
-    background-image: url('Connect4Board.png');
-    background-repeat: no-repeat;
-    background-size: 340px 308px;
-}
-
-.wrapper {
-    position: relative;
-    z-index: 0;
-}
-
-div.cell {
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    z-index: -1;
-    
-
-}
-
-
-
-.roja {
-    background: red;
-
-}
-
-.azul {
-    background: blue;
-}
-
-header {
-    text-align: center;
-}
-
-#buttons {
-    display: flex;
-    margin: 10px;
-    justify-content: center;    
-
-
 }
