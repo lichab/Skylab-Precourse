@@ -5,27 +5,39 @@ var cells = document.getElementsByClassName('cell');
 var grid = document.getElementById('grid');
 var playButton = document.getElementById('playButton');
 var result = document.getElementById('result');
+var restartButton = document.getElementById('restart');
+var quitButton = document.getElementById('quit');
 var players = [];
 var game;
 
-
-
 // ===============  START AND FINISHING FUNCTIONS ==================== // 
-function winner(player){
+
+function winner(player) {
 
     var resultChildren = result.children;
     var champion = 'Victoria del jugador ' + player.color;
     var numberOfMoves = player.movesMade.length + 1;
     resultChildren[0].innerHTML = champion;
-    resultChildren[1].innerHTML = 'Movimientos: ' +numberOfMoves;
-    resultChildren[2].addEventListener('click', function(){
+    resultChildren[1].innerHTML = 'Movimientos: ' + numberOfMoves;
+    resultChildren[2].addEventListener('click', function () {
         result.style.display = 'none';
     });
-    
+
     result.style.display = 'block';
 
+}
 
+function restart() {
+    game.eraseGrid();
+    return startGame();
+}
 
+function quit() {
+    var welcomeScreen = document.getElementById('welcome-screen');
+    grid.style.visibility = 'hidden';
+    welcomeScreen.style.visibility = 'visible';
+    welcomeScreen.style.opacity = 1;
+    game.eraseGrid();
 }
 
 function gameStyleSelection() {
@@ -37,7 +49,6 @@ function gameStyleSelection() {
     }
 }
 
-
 function removeWelcome() {
     var welcomeScreen = document.getElementById('welcome-screen');
     welcomeScreen.style.visibility = 'hidden';
@@ -45,23 +56,22 @@ function removeWelcome() {
 
 }
 
-
-
 function startGame() {
     var currentGameStyle = gameStyleSelection();
-    if(currentGameStyle === 'human'){
+    if (currentGameStyle === 'human') {
         var player1 = new Player('human', 'Red Player', 'red')
         var player2 = new Player('human', 'Yellow Player', 'yellow');
-    }else{
+    } else {
         var player1 = new Player('human', 'Red Player', 'red')
         var player2 = new Player('pc', 'Yellow Player', 'yellow');
     }
-    
+
     players = [player1, player2];
     game = new Game(player1, 0, 0, 0, createBoard());
 
     console.log(currentGameStyle)
     game.createGrid(game.board);
+    grid.style.visibility = 'visible';
     for (var i = 0; i < cells.length; i++) {
         cells[i].addEventListener('click', function (event) {
             var position = Number(event.target.id);
@@ -77,12 +87,13 @@ function startGame() {
             }
         })
     }
-
 }
 
-// ================== EXECUTION ==============//
+// ================== BUTTONS EXECUTION ==============//
 
 playButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', restart);
+quitButton.addEventListener('click', quit);
 
 
 // =========== CREATOR FUNCTIONS ========== //
@@ -129,8 +140,8 @@ function Move(row, col) {
 }
 
 function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
-    this.gameStyle = 
-    this.currentPlayer = currentPlayer;
+    this.gameStyle =
+        this.currentPlayer = currentPlayer;
     this.countVert = countVert;
     this.countHoriz = countHoriz;
     this.countDiag = countDiag;
@@ -181,6 +192,12 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
                 grid.appendChild(colDiv);
             }
         }
+    };
+
+    this.eraseGrid = function () {
+        while (grid.firstChild) {
+            grid.removeChild(grid.firstChild);
+        }
     }
 }
 
@@ -192,6 +209,7 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
 ||                                            ||
  ===============================================
 */
+
 function checkHorizontalWin() {
     var row = game.currentPlayer.currentMove.row;
     for (var col = 0; col <= 6; col++) {
@@ -205,7 +223,6 @@ function checkHorizontalWin() {
             game.resetCount('h');
         }
     }
-
     return false;
 }
 
@@ -228,7 +245,6 @@ function checkVerticalWin() {
 function topRightToBottomLeftDiagonal(stepDown, stepUp) {
     var row = game.currentPlayer.currentMove.row;
     var col = game.currentPlayer.currentMove.col;
-
 
     if (game.board[row + stepDown] && game.board[row + stepDown][col - stepDown]) {
         if (game.board[row + stepDown][col - stepDown] === game.currentPlayer.color) {
@@ -256,10 +272,8 @@ function topRightToBottomLeftDiagonal(stepDown, stepUp) {
 
 
 function topLeftToBottomRighDiagonal(stepDown, stepUp) {
-
     var row = game.currentPlayer.currentMove.row;
     var col = game.currentPlayer.currentMove.col;
-
 
     if (game.board[row + stepDown] && game.board[row + stepDown][col + stepDown]) {
         if (game.board[row + stepDown][col + stepDown] === game.currentPlayer.color) {
@@ -284,8 +298,6 @@ function topLeftToBottomRighDiagonal(stepDown, stepUp) {
         game.resetCount('d');
 
     }
-
-
 }
 
 
@@ -299,43 +311,4 @@ function checkWin() {
     } else {
         return false;
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function getCoordinates(position) {
-//     var index;
-//     for (var y = 0; y < 6; y++) {
-//         for (var x = 0; x < 7; x++) {
-//             if (game.board[y][x] === position) {
-//                 index = [y, x]
-//             }
-//         }
-//     }
-//     return index;
-// }
