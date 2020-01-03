@@ -1,6 +1,6 @@
 // ===== Variables Globales ====== //
 
-var player1 = new Player('human', 'Red Player' , 'red')
+var player1 = new Player('human', 'Red Player', 'red')
 var player2 = new Player('human', 'Yellow Player', 'yellow');
 var game = new Game(player1, 0, 0, 0, createBoard());
 var cells = document.getElementsByClassName('cell');
@@ -9,8 +9,8 @@ var players = [player1, player2];
 
 // =================================== // 
 
-function startGame(){
-   
+function startGame() {
+
     this.game.createGrid(game.board);
     for (var i = 0; i < cells.length; i++) {
         cells[i].addEventListener('click', function (event) {
@@ -20,7 +20,7 @@ function startGame(){
             var win = checkWin();
             if (win) {
                 console.log(game.currentPlayer.color + ' WINS!!')
-                
+
             } else {
                 game.currentPlayer.storeMove();
                 game.swapPlayers();
@@ -59,8 +59,8 @@ function Player(type, name, color) {
         return this;
     };
 
-    this.placeChip = function(){
-        var rowClass = 'row '+game.currentPlayer.currentMove.row;
+    this.placeChip = function () {
+        var rowClass = 'row ' + game.currentPlayer.currentMove.row;
         var cell = document.getElementsByClassName(rowClass)
         var takenCell = cell[game.currentPlayer.currentMove.col];
         takenCell.classList.add(game.currentPlayer.color)
@@ -87,26 +87,25 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
 
     this.resetCount = function (direction) {
         if (direction === 'h') {
-            this.countHoriz = 0
+            this.countHoriz = 0;
         };
         if (direction === 'v') {
-            this.countVert = 0
+            this.countVert = 0;
         };
         if (direction === 'd') {
-            this.countDiag = 0
+            this.countDiag = 0;
         };
 
         return this;
     };
     this.updateBoard = function (colPos) {
-        var actualRow = 5
-        for (var row = 5; row > 0; row--) {
+        for (var row = 5; row >= 0; row--) {
             if (this.board[row][colPos] === undefined) {
-                
+
                 this.board[row][colPos] = this.currentPlayer.color;
-                
+
                 var coord = [row, colPos];
-                
+
                 this.currentPlayer.currentMove.getPos(coord);
 
                 return this;
@@ -122,7 +121,7 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
         this.currentPlayer = players[0];
     };
 
-    this.createGrid = function() {
+    this.createGrid = function () {
         for (var row = 0; row < this.board.length; row++) {
             for (var col = 0; col < this.board[row].length; col++) {
                 var colDiv = document.createElement('div');
@@ -163,7 +162,8 @@ function checkVerticalWin() {
 
     var col = game.currentPlayer.currentMove.col;
     for (var row = 1; row <= 5; row++) {
-        if (game.board[row][col] && game.board[row][col] === game.board[row - 1][col]) {row
+        if (game.board[row][col] && game.board[row][col] === game.board[row - 1][col]) {
+            row
             game.countVert++;
             if (game.countVert === 3) {
                 return true
@@ -174,46 +174,79 @@ function checkVerticalWin() {
     return false;
 }
 
-function checkRightDiagnonalWin() {
-
+function topRightToBottomLeftDiagonal(stepDown, stepUp) {
     var row = game.currentPlayer.currentMove.row;
     var col = game.currentPlayer.currentMove.col;
-        
-    for (var i = 1; i <= 5; i++) {
 
-        for (var j = 0; j <= 6; j++) {
 
-            if (game.board[i-1][j-1] && game.board[i][j] === game.board[row - 1][col + 1]) {
-                game.countDiag++;                
-                if (game.countDiag === 3) {
-                    return true;
-                }
-            }
-            
+    if (game.board[row + stepDown] && game.board[row + stepDown][col - stepDown]) {
+        if (game.board[row + stepDown][col - stepDown] === game.currentPlayer.color) {
+            stepDown++;
+            game.countDiag++;
+            topRightToBottomLeftDiagonal(stepDown, stepUp)
         }
     }
 
-    game.resetCount('d');
-    return false;
+    if (game.board[row - stepUp] && game.board[row - stepUp][col + stepUp]) {
+        if (game.board[row - stepUp][col + stepUp] === game.currentPlayer.color) {
+            stepUp++;
+            game.countDiag++;
+            topRightToBottomLeftDiagonal(stepDown, stepUp);
+        }
+    }
+
+    if (game.countDiag >= 3) {
+        return true;
+    } else {
+        game.resetCount('d');
+    }
+
 }
 
-//// ======= DALE QE FALTA ESTO NOMAS Y YA ESTASSSS!!! ==== ///
 
-function checkLeftDiagonalWin(){
-    return false
+function topLeftToBottomRighDiagonal(stepDown, stepUp) {
+
+    var row = game.currentPlayer.currentMove.row;
+    var col = game.currentPlayer.currentMove.col;
+
+
+    if (game.board[row + stepDown] && game.board[row + stepDown][col + stepDown]) {
+        if (game.board[row + stepDown][col + stepDown] === game.currentPlayer.color) {
+            stepDown++;
+            game.countDiag++;
+            topLeftToBottomRighDiagonal(stepDown, stepUp);
+        }
+    }
+
+    if (game.board[row - stepUp] && game.board[row - stepUp][col - stepUp]) {
+        if (game.board[row - stepUp][col - stepUp] === game.currentPlayer.color) {
+            stepUp++;
+            game.countDiag++;
+            topLeftToBottomRighDiagonal(stepDown, stepUp);
+        }
+
+    }
+
+    if (game.countDiag >= 3) {
+        return true;
+    } else {
+        game.resetCount('d');
+
+    }
+
+
 }
 
 
 function checkWin() {
     var horizontalWin = checkHorizontalWin();
     var verticalWin = checkVerticalWin();
-    var rightDiagnonalWin = checkRightDiagnonalWin()
-    var leftDiagnonalWin = checkLeftDiagonalWin();
-    if (horizontalWin || verticalWin || rightDiagnonalWin || leftDiagnonalWin ) {
-        // console.log(horizontalWin, verticalWin, checkRightDiagnonalWin)
-        return true
+    var topLeftToBottomRight = topLeftToBottomRighDiagonal(1, 1);
+    var topRightToBottomLeft = topRightToBottomLeftDiagonal(1, 1);
+    if (horizontalWin || verticalWin || topLeftToBottomRight || topRightToBottomLeft) {
+        return true;
     } else {
-        return false
+        return false;
     }
 
 }
