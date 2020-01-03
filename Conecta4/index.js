@@ -1,17 +1,67 @@
-// ===== Variables Globales ====== //
+// ===== GOLBAL VARIABLES====== //
 
-var player1 = new Player('human', 'Red Player', 'red')
-var player2 = new Player('human', 'Yellow Player', 'yellow');
-var game = new Game(player1, 0, 0, 0, createBoard());
+var gameStyles = document.getElementsByClassName('gameStyles');
 var cells = document.getElementsByClassName('cell');
 var grid = document.getElementById('grid');
-var players = [player1, player2];
+var playButton = document.getElementById('playButton');
+var result = document.getElementById('result');
+var players = [];
+var game;
 
-// =================================== // 
+
+
+// ===============  START AND FINISHING FUNCTIONS ==================== // 
+function winner(player){
+
+    var resultChildren = result.children;
+    var champion = 'Victoria del jugador ' + player.color;
+    var numberOfMoves = player.movesMade.length + 1;
+    resultChildren[0].innerHTML = champion;
+    resultChildren[1].innerHTML = 'Movimientos: ' +numberOfMoves;
+    resultChildren[2].addEventListener('click', function(){
+        result.style.display = 'none';
+    });
+    
+    result.style.display = 'block';
+
+
+
+}
+
+function gameStyleSelection() {
+    for (var i = 0; i < gameStyles.length; i++) {
+        if (gameStyles[i].checked) {
+            removeWelcome();
+            return gameStyles[i].value;
+        }
+    }
+}
+
+
+function removeWelcome() {
+    var welcomeScreen = document.getElementById('welcome-screen');
+    welcomeScreen.style.visibility = 'hidden';
+    welcomeScreen.style.opacity = 0;
+
+}
+
+
 
 function startGame() {
+    var currentGameStyle = gameStyleSelection();
+    if(currentGameStyle === 'human'){
+        var player1 = new Player('human', 'Red Player', 'red')
+        var player2 = new Player('human', 'Yellow Player', 'yellow');
+    }else{
+        var player1 = new Player('human', 'Red Player', 'red')
+        var player2 = new Player('pc', 'Yellow Player', 'yellow');
+    }
+    
+    players = [player1, player2];
+    game = new Game(player1, 0, 0, 0, createBoard());
 
-    this.game.createGrid(game.board);
+    console.log(currentGameStyle)
+    game.createGrid(game.board);
     for (var i = 0; i < cells.length; i++) {
         cells[i].addEventListener('click', function (event) {
             var position = Number(event.target.id);
@@ -19,7 +69,7 @@ function startGame() {
             game.currentPlayer.placeChip();
             var win = checkWin();
             if (win) {
-                console.log(game.currentPlayer.color + ' WINS!!')
+                setTimeout(winner(game.currentPlayer), 1000)
 
             } else {
                 game.currentPlayer.storeMove();
@@ -30,12 +80,12 @@ function startGame() {
 
 }
 
-// ================== Ejecucion ==============//
+// ================== EXECUTION ==============//
 
-startGame();
+playButton.addEventListener('click', startGame);
 
 
-// ==== Funciones  Creadoras de objeos ==== //
+// =========== CREATOR FUNCTIONS ========== //
 
 function createBoard() {
     var board = new Array(6);
@@ -79,6 +129,7 @@ function Move(row, col) {
 }
 
 function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
+    this.gameStyle = 
     this.currentPlayer = currentPlayer;
     this.countVert = countVert;
     this.countHoriz = countHoriz;
@@ -136,8 +187,8 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
 /*
  ===============================================
 ||                                            ||  
-||   FUNCTIONES PARA VERIFICAR                ||
-||           VICTORIA                         ||
+||   VICTORY CHECK  FUNCTIONS                 ||
+||                                            ||
 ||                                            ||
  ===============================================
 */
@@ -273,12 +324,6 @@ function checkWin() {
 
 
 
-// function removeWelcome(){
-//     var welcomeScreen = document.getElementById('welcome-screen');
-//     welcomeScreen.style.visibility = 'hidden';
-//     welcomeScreen.style.opacity = 0;
-
-// }
 
 
 

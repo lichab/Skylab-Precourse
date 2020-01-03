@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,21 @@
     <link rel="stylesheet" href="index.css">
     <title>Conecta 4</title>
 </head>
+
 <body>
-    <!-- <div id='welcome-screen'>
+    <div id='welcome-screen'>
         <h1>Bienvenido a Conecta 4</h1>
         <div>
-            <input type="radio" name="player vs player" checked>
-            <label for="player vs player">1 vs 1</label>
+            <input class="gameStyles" type="radio" name="vsmode" value="human" checked>
+            <label>1 vs 1</label>
         </div>
         <div>
-            <input type="radio" name="player vs pc" value="pc">
-            <label for="player vs pc">1 vs PC</label>
+            <input class="gameStyles" type="radio" name="vsmode" value="pc">
+            <label>1 vs PC</label>
         </div>
-        
-        <button onclick="removeWelcome()">Jugar</button>
-    </div> -->
+
+        <button id="playButton">Jugar</button>
+    </div>
     <header>
         <h1>CONECTA 4</h1>
         <h4>El rojo comienza, simplemente pon la primera ficha para comenzar</h4>
@@ -29,11 +31,16 @@
         <section id="grid">
         </section>
     </div>
-   
+    <div id="result">
+        <h1 id = "champion"></h1>
+        <p id = "moves"></p>
+        <button>Ok</button>
+    </div>
     <section id="buttons">
         <button id="restart">Reiniciar</button>
-        <button id= "quit">Salir</button>
+        <button id="quit">Salir</button>
     </section>
 </body>
 <script src="index.js"></script>
+
 </html>

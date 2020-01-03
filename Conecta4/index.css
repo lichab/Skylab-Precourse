@@ -1,4 +1,4 @@
-/* #welcome-screen {
+#welcome-screen {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -16,6 +16,23 @@
 
 }
 
+#result {
+    border-radius: 5px;
+    background: #87b88c;
+    box-shadow: 0.5px 0.5px 4px #2a58a1;
+    display: none;
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    top: 28vh;
+    left: 14vw;
+}
+
+#results h1{
+    margin-top: 40px;
+}
+
 #welcome-screen div {
     display: flex;
     width: 100px;
@@ -31,7 +48,7 @@
 label{
     min-width: 70px;
 
-} */
+}
 
 body{
 
