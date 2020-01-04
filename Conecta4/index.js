@@ -10,7 +10,7 @@ var quitButton = document.getElementById('quit');
 var players = [];
 var game;
 
-// ===============  START AND FINISHING FUNCTIONS ==================== // 
+// ===============  START, FLOW AND FINISHING FUNCTIONS ==================== // 
 
 function winner(player) {
 
@@ -24,6 +24,7 @@ function winner(player) {
     });
 
     result.style.display = 'block';
+    toggleCellClicksHandler(true);
 
 }
 
@@ -56,8 +57,24 @@ function removeWelcome() {
 
 }
 
+function lastMoveChecks(position) {
+    game.updateBoard(position);
+    game.currentPlayer.placeChip();
+    var win = checkWin();
+    if (win) {
+        return winner(game.currentPlayer);
+
+    } else {
+        game.currentPlayer.storeMove();
+        game.swapPlayers();
+    }
+
+}
+
+
 function startGame() {
     var currentGameStyle = gameStyleSelection();
+
     if (currentGameStyle === 'human') {
         var player1 = new Player('human', 'Red Player', 'red')
         var player2 = new Player('human', 'Yellow Player', 'yellow');
@@ -68,33 +85,42 @@ function startGame() {
 
     players = [player1, player2];
     game = new Game(player1, 0, 0, 0, createBoard());
-
-    console.log(currentGameStyle)
     game.createGrid(game.board);
     grid.style.visibility = 'visible';
-    for (var i = 0; i < cells.length; i++) {
-        cells[i].addEventListener('click', function (event) {
-            var position = Number(event.target.id);
-            game.updateBoard(position);
-            game.currentPlayer.placeChip();
-            var win = checkWin();
-            if (win) {
-                setTimeout(winner(game.currentPlayer), 1000)
 
-            } else {
-                game.currentPlayer.storeMove();
-                game.swapPlayers();
-            }
-        })
-    }
+    toggleCellClicksHandler(false);
+
 }
 
-// ================== BUTTONS EXECUTION ==============//
+// ========== BUTTONS EXECUTION AND EVENT LISTENERS HANDLING============//
 
 playButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', restart);
 quitButton.addEventListener('click', quit);
 
+
+function toggleCellClicksHandler(isOn) {
+    if (!isOn) {
+        for (var i = 0; i < cells.length; i++) {
+            cells[i].addEventListener('click', handleCellClicks)
+        }
+    } else if (isOn) {
+        for (var i = 0; i < cells.length; i++) {
+            cells[i].removeEventListener('click', handleCellClicks)
+        }
+    } else {
+        console.log('isOn is of unknown type. Needs to be a boolean');
+    }
+}
+
+function handleCellClicks(event) {
+    var position = Number(event.target.id);
+    lastMoveChecks(position);
+    if (game.currentPlayer.type === 'pc') {
+        var colPos = game.currentPlayer.chooseMove();
+        lastMoveChecks(colPos);
+    }
+}
 
 // =========== CREATOR FUNCTIONS ========== //
 
@@ -124,8 +150,15 @@ function Player(type, name, color) {
         var rowClass = 'row ' + game.currentPlayer.currentMove.row;
         var cell = document.getElementsByClassName(rowClass)
         var takenCell = cell[game.currentPlayer.currentMove.col];
-        takenCell.classList.add(game.currentPlayer.color)
+        takenCell.classList.add(game.currentPlayer.color);
+        return this;
+    };
+
+    this.chooseMove = function () {
+        var colPos = Math.floor((Math.random() * 6) + 0);
+        return colPos;
     }
+
 }
 
 function Move(row, col) {
@@ -140,8 +173,7 @@ function Move(row, col) {
 }
 
 function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
-    this.gameStyle =
-        this.currentPlayer = currentPlayer;
+    this.currentPlayer = currentPlayer;
     this.countVert = countVert;
     this.countHoriz = countHoriz;
     this.countDiag = countDiag;
@@ -181,6 +213,7 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
         players[1] = b;
 
         this.currentPlayer = players[0];
+        return this;
     };
 
     this.createGrid = function () {
@@ -192,12 +225,14 @@ function Game(currentPlayer, countVert, countHoriz, countDiag, board) {
                 grid.appendChild(colDiv);
             }
         }
+        return this;
     };
 
     this.eraseGrid = function () {
         while (grid.firstChild) {
             grid.removeChild(grid.firstChild);
         }
+        return this;
     }
 }
 
