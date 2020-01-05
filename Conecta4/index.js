@@ -12,7 +12,7 @@ var game;
 
 // ===============  START, FLOW AND FINISHING FUNCTIONS ==================== // 
 
-function winner(player) {
+function gameWinner(player) {
 
     var resultChildren = result.children;
     var champion = 'Victoria del jugador ' + player.color;
@@ -27,6 +27,21 @@ function winner(player) {
     toggleCellClicksHandler(true);
 
 }
+
+function gameDraw() {
+    var resultChildren = result.children;
+    var numberOfMoves = game.currentPlayer.movesMade.length + 1;
+    resultChildren[0].innerHTML = 'Empate!';
+    resultChildren[1].innerHTML = 'Movimientos: ' + numberOfMoves;
+    resultChildren[2].addEventListener('click', function () {
+        result.style.display = 'none';
+    });
+
+    result.style.display = 'block';
+    toggleCellClicksHandler(true);
+
+}
+
 
 function restart() {
     game.eraseGrid();
@@ -52,9 +67,12 @@ function gameStyleSelection() {
 
 function removeWelcome() {
     var welcomeScreen = document.getElementById('welcome-screen');
+    welcomeScreen.style.transform = 'rotateY(180deg)'
     welcomeScreen.style.visibility = 'hidden';
-    welcomeScreen.style.opacity = 0;
-
+    // welcomeScreen.style.opacity = 0;
+    setTimeout(function () {
+        welcomeScreen.style.transform = 'none'
+    }, 1000)
 }
 
 function lastMoveChecks(position) {
@@ -62,18 +80,24 @@ function lastMoveChecks(position) {
     game.currentPlayer.placeChip();
     var win = checkWin();
     if (win) {
-        return winner(game.currentPlayer);
+        return gameWinner(game.currentPlayer);
 
     } else {
         game.currentPlayer.storeMove();
         game.swapPlayers();
     }
+    var draw = checkDraw();
+    if (draw) {
+        return gameDraw();
+    }
+
 
 }
 
 
 function startGame() {
     var currentGameStyle = gameStyleSelection();
+
 
     if (currentGameStyle === 'human') {
         var player1 = new Player('human', 'Red Player', 'red')
@@ -335,6 +359,19 @@ function topLeftToBottomRighDiagonal(stepDown, stepUp) {
     }
 }
 
+
+function checkDraw() {
+
+    for (var row = 0; row < game.board.length; row++) {
+        for (var col = 0; col < game.board[row].length; col++) {
+            if (game.board[row][col] === undefined) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
 
 function checkWin() {
     var horizontalWin = checkHorizontalWin();
